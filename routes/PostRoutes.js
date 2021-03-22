@@ -1,7 +1,6 @@
 import express from "express";
 import expressAsyncHandler from "express-async-handler";
 import { isAuth } from "../Auth.js";
-import path from "path";
 import Post from "../models/PostModel.js";
 import multer from "multer";
 

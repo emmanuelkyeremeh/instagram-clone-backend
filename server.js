@@ -6,9 +6,7 @@ import mongoose from "mongoose";
 import userRouter from "./routes/UserRouter.js";
 import PostRouter from "./routes/PostRoutes.js";
 import CommentRouter from "./routes/CommentRouter.js";
-// import multer from "multer";
-// import GridFsStorage from "multer-gridfs-storage";
-// import expressAsyncHandler from "express-async-handler";
+import FollowRouter from "./routes/FollowRoutes.js";
 
 dotenv.config();
 const PORT = process.env.PORT;
@@ -21,6 +19,7 @@ app.use(express.json());
 app.use("/api/users", userRouter);
 app.use("/api/posts", PostRouter);
 app.use("/api/comments", CommentRouter);
+app.use("/api/follow/", FollowRouter);
 
 app.use((err, req, res, next) => [
   res.status(500).send({ message: err.message }),
