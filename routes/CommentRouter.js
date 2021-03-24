@@ -28,4 +28,16 @@ CommentRouter.get(
   })
 );
 
+CommentRouter.get(
+  "/get/comments",
+  expressAsyncHandler(async (req, res) => {
+    const AllpostComments = await Comment.find();
+    if (AllpostComments) {
+      res.status(201).send(AllpostComments);
+    } else {
+      res.status(404).send("An Error occurred");
+    }
+  })
+);
+
 export default CommentRouter;

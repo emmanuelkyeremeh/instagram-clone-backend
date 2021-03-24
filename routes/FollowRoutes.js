@@ -16,16 +16,36 @@ FollowRouter.post(
   })
 );
 FollowRouter.get(
-  "/info/:follower/:followed",
+  "/info/",
   expressAsyncHandler(async (req, res) => {
-    const followInfo = await Follow.find({
-      user_follower: req.params.follower,
-      user_followed: req.params.followed,
-    });
+    const followInfo = await Follow.find();
     if (followInfo) {
       res.status(201).send(followInfo);
     } else {
       res.status(404).send("Data not Found!");
+    }
+  })
+);
+FollowRouter.get(
+  "/followers/:id",
+  expressAsyncHandler(async (req, res) => {
+    const followers = await Follow.find({ user_followed: req.params.id });
+    if (followers) {
+      res.status(201).send(followers);
+    } else {
+      res.status(404).send("An Error occured.");
+    }
+  })
+);
+
+FollowRouter.get(
+  "/following/:id",
+  expressAsyncHandler(async (req, res) => {
+    const following = await Follow.find({ user_follower: req.params.id });
+    if (following) {
+      res.status(201).send(followers);
+    } else {
+      res.status(404).send("An Error occured.");
     }
   })
 );

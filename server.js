@@ -7,6 +7,7 @@ import userRouter from "./routes/UserRouter.js";
 import PostRouter from "./routes/PostRoutes.js";
 import CommentRouter from "./routes/CommentRouter.js";
 import FollowRouter from "./routes/FollowRoutes.js";
+import LikeRouter from "./routes/LikeRouter.js";
 
 dotenv.config();
 const PORT = process.env.PORT;
@@ -20,6 +21,7 @@ app.use("/api/users", userRouter);
 app.use("/api/posts", PostRouter);
 app.use("/api/comments", CommentRouter);
 app.use("/api/follow/", FollowRouter);
+app.use("/api/like", LikeRouter);
 
 app.use((err, req, res, next) => [
   res.status(500).send({ message: err.message }),
