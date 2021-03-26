@@ -8,7 +8,7 @@ LikeRouter.post(
   "/",
   expressAsyncHandler(async (req, res) => {
     const newLike = new Like({
-      userid: req.body.id,
+      userid: req.body.userid,
       postid: req.body.postid,
     });
     const saveLike = await newLike.save();
@@ -22,21 +22,6 @@ LikeRouter.get(
     const like = await Like.find();
     if (like) {
       res.status(201).send(like);
-    } else {
-      res.status(404).send("Data not found!");
-    }
-  })
-);
-
-LikeRouter.get(
-  "/:userid/:postid",
-  expressAsyncHandler(async (req, res) => {
-    const singlelike = Like.find({
-      userid: req.params.userid,
-      postid: req.params.postid,
-    });
-    if (singlelike) {
-      res.status(201).send(singlelike);
     } else {
       res.status(404).send("Data not found!");
     }
