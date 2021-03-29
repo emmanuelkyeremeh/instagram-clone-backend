@@ -66,7 +66,7 @@ PostRouter.get(
 PostRouter.delete(
   "/:id",
   expressAsyncHandler(async (req, res) => {
-    await Post.findOneAndDelete({ _id: req.params.id });
+    const post = await Post.findOneAndDelete({ _id: req.params.id });
     res.send("Post Deleted!");
   })
 );

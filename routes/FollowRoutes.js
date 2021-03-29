@@ -43,7 +43,7 @@ FollowRouter.get(
   expressAsyncHandler(async (req, res) => {
     const following = await Follow.find({ user_follower: req.params.id });
     if (following) {
-      res.status(201).send(followers);
+      res.status(201).send(following);
     } else {
       res.status(404).send("An Error occured.");
     }
