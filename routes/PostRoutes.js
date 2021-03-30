@@ -9,7 +9,7 @@ const PostRouter = express.Router();
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "https://instagram-clone-xi.vercel.app/public/");
+    cb(null, process.cwd() + "https://instagram-clone-xi.vercel.app/public/");
   },
   filename: (req, file, cb) => {
     cb(null, file.originalname);
