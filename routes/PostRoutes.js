@@ -3,13 +3,12 @@ import expressAsyncHandler from "express-async-handler";
 import { isAuth } from "../Auth.js";
 import Post from "../models/PostModel.js";
 import multer from "multer";
-import * as photos from "../photos";
 
 const PostRouter = express.Router();
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, process.cwd() + "../photos/");
+    cb(null, "https://instagram-clone-xi.vercel.app/");
   },
   filename: (req, file, cb) => {
     cb(null, file.originalname);
@@ -49,13 +48,6 @@ PostRouter.get(
     } else {
       res.status(404).send({ message: "Post not found" });
     }
-  })
-);
-
-PostRouter.get(
-  "/images",
-  expressAsyncHandler(async (req, res) => {
-    const photo = await res.send(photos);
   })
 );
 
