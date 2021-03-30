@@ -14,7 +14,12 @@ const PORT = process.env.PORT;
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://instagram-clone-xi.vercel.app/",
+    optionsSuccessStatus: 200,
+  })
+);
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use("/api/users", userRouter);
