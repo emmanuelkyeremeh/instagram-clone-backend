@@ -5,7 +5,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
   "author": "Emmanuel Kyeremeh",
@@ -16,11 +15,11 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-async-handler": "^1.1.4",
-    "gridfs-stream": "^1.1.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.12",
-    "multer": "^1.4.2",
-    "multer-gridfs-storage": "^4.2.0",
-    "pusher": "^5.0.0"
+    "multer": "^1.4.2"
+  },
+  "engines": {
+    "node": "15.x"
   }
 }
