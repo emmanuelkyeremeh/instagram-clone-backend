@@ -16,7 +16,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://instagram-clone-xi.vercel.app/",
+    origin: "https://instagram-clone-xi.vercel.app",
     optionsSuccessStatus: 200,
   })
 );
