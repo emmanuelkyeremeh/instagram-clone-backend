@@ -12,7 +12,7 @@ var storage = sftpStorage({
     host: "www.instagram-clone-xi.vercel.app",
   },
   destination: function (req, file, cb) {
-    cb(null, "/public");
+    cb(null, "public/");
   },
   filename: function (req, file, cb) {
     cb(null, file.fieldname + "-" + Date.now());
