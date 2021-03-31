@@ -17,7 +17,9 @@
     "express-async-handler": "^1.1.4",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.12",
-    "multer": "^1.4.2"
+    "multer": "^1.4.2",
+    "multer-sftp": "^1.1.1",
+    "ssh2-sftp-client": "^6.0.1"
   },
   "engines": {
     "node": "15.x"

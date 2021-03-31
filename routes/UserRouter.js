@@ -3,16 +3,20 @@ import expressAsyncHander from "express-async-handler";
 import User from "../models/UserModel.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../Auth.js";
+import sftpStorage from "multer-sftp";
 import multer from "multer";
 
 const userRouter = express.Router();
 
-const userStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, process.cwd() + "../../instagram-clone-next/public");
+const userStorage = sftpStorage({
+  sftp: {
+    host: "www.instagram-clone-xi.vercel.app",
   },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname);
+  destination: function (req, file, cb) {
+    cb(null, "/public");
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + "-" + Date.now());
   },
 });
 
@@ -51,7 +55,7 @@ userRouter.post(
       username: req.body.username,
       email: req.body.email,
       password: bcrypt.hashSync(req.body.password, 8),
-      avatar: req.file.originalname,
+      avatar: req.file.fieldname,
       bio: req.body.bio,
     });
     const newUser = await user.save();
@@ -106,7 +110,7 @@ userRouter.put(
       user.lastName = req.body.lastName || user.lastName;
       user.username = req.body.username || user.username;
       user.email = req.body.email || user.email;
-      user.avatar = req.file.originalname || user.avatar;
+      user.avatar = req.file.fieldname || user.avatar;
       user.bio = req.body.bio || user.bio;
       if (req.body.password) {
         user.password = bcrypt.hashSync(req.body.password, 8);
