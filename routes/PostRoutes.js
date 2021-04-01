@@ -7,15 +7,12 @@ import sftpStorage from "multer-sftp";
 
 const PostRouter = express.Router();
 
-var storage = sftpStorage({
-  sftp: {
-    host: "www.instagram-clone-xi.vercel.app",
-  },
+const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "public/");
+    cb(null, process.cwd() + "../../instagram-clone-next/public/");
   },
   filename: function (req, file, cb) {
-    cb(null, file.fieldname + "-" + Date.now());
+    cb(null, file.originalname);
   },
 });
 
@@ -28,7 +25,7 @@ PostRouter.post(
     const Posts = new Post({
       user: req.body._id,
       user_username: req.body.username,
-      image: req.file.fieldname,
+      image: req.file.originalname,
       caption: req.body.caption,
     });
     const newPost = await Posts.save();
@@ -83,7 +80,7 @@ PostRouter.put(
     if (post) {
       post.user = post.user;
       post.user_username = post.user_username;
-      post.image = req.file.fieldname;
+      post.image = req.file.originalname;
       post.caption = req.body.caption;
 
       const updatedPost = post.save();

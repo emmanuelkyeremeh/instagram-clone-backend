@@ -8,15 +8,12 @@ import multer from "multer";
 
 const userRouter = express.Router();
 
-const userStorage = sftpStorage({
-  sftp: {
-    host: "www.instagram-clone-xi.vercel.app",
-  },
+const userStorage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "public/");
+    cb(null, "../../instagram-clone-next/public/");
   },
   filename: function (req, file, cb) {
-    cb(null, file.fieldname + "-" + Date.now());
+    cb(null, file.originalname);
   },
 });
 
@@ -55,7 +52,7 @@ userRouter.post(
       username: req.body.username,
       email: req.body.email,
       password: bcrypt.hashSync(req.body.password, 8),
-      avatar: req.file.fieldname,
+      avatar: req.file.originalname,
       bio: req.body.bio,
     });
     const newUser = await user.save();
@@ -110,7 +107,7 @@ userRouter.put(
       user.lastName = req.body.lastName || user.lastName;
       user.username = req.body.username || user.username;
       user.email = req.body.email || user.email;
-      user.avatar = req.file.fieldname || user.avatar;
+      user.avatar = req.file.originalname || user.avatar;
       user.bio = req.body.bio || user.bio;
       if (req.body.password) {
         user.password = bcrypt.hashSync(req.body.password, 8);
