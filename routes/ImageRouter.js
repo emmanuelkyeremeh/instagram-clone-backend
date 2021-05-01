@@ -11,11 +11,8 @@ const ImageRouter = express.Router();
 
 const storage = new Gridfsstorage({
   url: process.env.MONGODB_URI,
-  file: (req, file, err) => {
+  file: (req, file) => {
     return new Promise((resolve, reject) => {
-      if (err) {
-        return reject(err);
-      }
       const filename = file.originalname;
       const fileInfo = {
         filename: filename,
@@ -26,7 +23,7 @@ const storage = new Gridfsstorage({
   },
 });
 
-const upload = multer({ storage });
+const upload = multer({ storage: storage });
 
 ImageRouter.post(
   "/",
