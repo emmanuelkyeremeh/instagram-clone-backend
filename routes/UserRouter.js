@@ -3,21 +3,8 @@ import expressAsyncHander from "express-async-handler";
 import User from "../models/UserModel.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../Auth.js";
-import sftpStorage from "multer-sftp";
-import multer from "multer";
 
 const userRouter = express.Router();
-
-const userStorage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "../../instagram-clone-next/public/");
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
-});
-
-const upload = multer({ storage: userStorage });
 
 userRouter.get(
   "/",
@@ -44,7 +31,6 @@ userRouter.get(
 
 userRouter.post(
   "/signup",
-  upload.single("avatar"),
   expressAsyncHander(async (req, res) => {
     const user = new User({
       firstName: req.body.firstName,
@@ -52,7 +38,8 @@ userRouter.post(
       username: req.body.username,
       email: req.body.email,
       password: bcrypt.hashSync(req.body.password, 8),
-      avatar: req.file.originalname,
+      avatarName: req.body.avatarName,
+      actualAvatar: req.body.actualAvatar,
       bio: req.body.bio,
     });
     const newUser = await user.save();
@@ -62,7 +49,8 @@ userRouter.post(
       lastName: newUser.lastName,
       username: newUser.username,
       email: newUser.email,
-      avatar: newUser.avatar,
+      avatarName: newUser.avatarName,
+      actualAvatar: newUser.actualAvatar,
       bio: newUser.bio,
       token: generateToken(newUser),
     });
@@ -84,7 +72,8 @@ userRouter.post(
           lastName: user.lastName,
           username: user.username,
           email: user.email,
-          avatar: user.avatar,
+          avatarName: user.avatarName,
+          actualAvatar: user.actualAvatar,
           bio: user.bio,
           token: generateToken(user),
         });
@@ -99,7 +88,6 @@ userRouter.post(
 
 userRouter.put(
   "/update/user/:id",
-  upload.single("avatar"),
   expressAsyncHander(async (req, res) => {
     const user = await User.findByIdAndUpdate(req.params.id);
     if (user) {
@@ -107,7 +95,8 @@ userRouter.put(
       user.lastName = req.body.lastName || user.lastName;
       user.username = req.body.username || user.username;
       user.email = req.body.email || user.email;
-      user.avatar = req.file.originalname || user.avatar;
+      user.avatarName = req.body.avatarName || user.avatarName;
+      user.actualAvatar = req.body.actualAvatar || user.actualAvatar;
       user.bio = req.body.bio || user.bio;
       if (req.body.password) {
         user.password = bcrypt.hashSync(req.body.password, 8);
@@ -119,7 +108,8 @@ userRouter.put(
         lastName: updatedUser.lastName,
         username: updatedUser.username,
         email: updatedUser.email,
-        avatar: updatedUser.avatar,
+        avatarName: updatedUser.avatarName,
+        actualAvatar: updatedUser.actualAvatar,
         bio: updatedUser.bio,
         token: generateToken(updatedUser),
       });

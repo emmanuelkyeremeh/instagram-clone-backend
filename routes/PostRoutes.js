@@ -1,31 +1,17 @@
 import express from "express";
 import expressAsyncHandler from "express-async-handler";
-import { isAuth } from "../Auth.js";
 import Post from "../models/PostModel.js";
-import multer from "multer";
-import sftpStorage from "multer-sftp";
 
 const PostRouter = express.Router();
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, process.cwd() + "../../instagram-clone-next/public/");
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
-});
-
-const upload = multer({ storage: storage });
-
 PostRouter.post(
   "/",
-  upload.single("image"),
   expressAsyncHandler(async (req, res) => {
     const Posts = new Post({
       user: req.body._id,
       user_username: req.body.username,
-      image: req.file.originalname,
+      imageName: req.body.imageName,
+      actualImage: req.body.actualImage,
       caption: req.body.caption,
     });
     const newPost = await Posts.save();
@@ -74,17 +60,19 @@ PostRouter.delete(
 
 PostRouter.put(
   "/:id",
-  upload.single("image"),
   expressAsyncHandler(async (req, res) => {
     const post = await Post.findByIdAndUpdate(req.params.id);
     if (post) {
       post.user = post.user;
       post.user_username = post.user_username;
-      post.image = req.file.originalname;
-      post.caption = req.body.caption;
+      post.imageName = req.body.imageName || post.imageName;
+      post.actualImage = req.body.actualImage || post.actualImage;
+      post.caption = req.body.caption || post.caption;
 
       const updatedPost = post.save();
       res.send("Post Updated!");
+    } else {
+      res.send("Cannot find post!");
     }
   })
 );
