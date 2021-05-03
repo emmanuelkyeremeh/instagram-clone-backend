@@ -67,8 +67,16 @@ ImageRouter.get(
 ImageRouter.delete(
   "/:filename",
   expressAsyncHandler(async (req, res) => {
-    await gfs.files.findOneAndDelete({ filename: req.params.filename });
-    res.send("File Deleted!");
+    await gfs.remove(
+      { filename: req.params.filename, root: "uploads" },
+      (error, files) => {
+        if (error) {
+          res.status(404).send("An error occured");
+        } else {
+          res.send("Post Deleted!");
+        }
+      }
+    );
   })
 );
 
