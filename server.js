@@ -9,16 +9,16 @@ import FollowRouter from "./routes/FollowRoutes.js";
 import LikeRouter from "./routes/LikeRouter.js";
 import ImageRouter from "./routes/ImageRouter.js";
 import Grid from "gridfs-stream";
-import http from "http";
-import socket from "socket.io";
+import { createServer } from "http";
+import * as socket from "socket.io";
 dotenv.config();
 
 const PORT = process.env.PORT;
 
 const app = express();
 
-const server = http.Server(app);
-const io = socket(server);
+const server = createServer(app);
+const io = new socket.Server(server);
 
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
