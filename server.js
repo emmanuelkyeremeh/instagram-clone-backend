@@ -9,20 +9,16 @@ import FollowRouter from "./routes/FollowRoutes.js";
 import LikeRouter from "./routes/LikeRouter.js";
 import ImageRouter from "./routes/ImageRouter.js";
 import Grid from "gridfs-stream";
-import Pusher from "pusher";
+import http from "http";
+import socket from "socket.io";
 dotenv.config();
-
-const pusher = new Pusher({
-  appId: "1177968",
-  key: "fafec25bb7f14da1a62c",
-  secret: "f1cbd44eeaf5d26db615",
-  cluster: "eu",
-  useTLS: true,
-});
 
 const PORT = process.env.PORT;
 
 const app = express();
+
+const server = http.Server(app);
+const io = socket(server);
 
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
@@ -59,34 +55,15 @@ db.once("open", () => {
 
   gfs = Grid(db.db, mongoose.mongo);
   gfs.collection("uploads");
+});
 
-  const postCollection = db.collection("posts");
-  const postChangeStream = postCollection.watch();
+io.on("connection", (socket) => {
+  socket.on("addPost", (data) => socket.emit("addPost", data));
+  socket.on("updatePost", (data) => socket.emit("updatePost", data));
+  socket.on("deletePost", (data) => socket.emit("deletePost", data));
 
-  postChangeStream.on("change", (change) => {
-    if (change.operationType === "insert") {
-      const posts = change.fullDocument;
-      pusher.trigger("posts", "inserted", {
-        _id: posts._id,
-        user: posts.user,
-        user_username: posts.user_username,
-        imageName: posts.imageName,
-        actualImage: posts.actualImage,
-        caption: posts.caption,
-      });
-    } else if (change.operationType === "update") {
-      const posts = change.fullDocument;
-      pusher.trigger("posts", "updated", {
-        _id: posts._id,
-        user: posts.user,
-        user_username: posts.user_username,
-        imageName: posts.imageName,
-        actualImage: posts.actualImage,
-        caption: posts.caption,
-      });
-    } else if (change.operationType === "delete") {
-      pusher.trigger("posts", "deleted", change.documentKey._id);
-    }
+  socket.on("disconnect", () => {
+    console.log("Disconnected");
   });
 });
 
