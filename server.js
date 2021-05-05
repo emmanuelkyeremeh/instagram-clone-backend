@@ -12,6 +12,7 @@ import Grid from "gridfs-stream";
 import { createServer } from "http";
 import * as socket from "socket.io";
 dotenv.config();
+import Post from "./models/PostModel.js";
 
 const PORT = process.env.PORT;
 
@@ -23,6 +24,26 @@ const io = new socket.Server(server);
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json({ limit: "50mb" }));
+
+io.on("connection", (socket) => {
+  socket.on("addPost", async (post) => {
+    const newPost = new Post({
+      user: post._id,
+      user_username: post.username,
+      imageName: post.imageName,
+      actualImage: post.actualImage,
+      caption: post.caption,
+    });
+
+    await newPost.save();
+    io.emit("sendPostToClient", newPost);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("Disconnected");
+  });
+});
+
 app.use("/api/users", userRouter);
 app.use("/api/posts", PostRouter);
 app.use("/api/comments", CommentRouter);
@@ -55,16 +76,6 @@ db.once("open", () => {
 
   gfs = Grid(db.db, mongoose.mongo);
   gfs.collection("uploads");
-});
-
-io.on("connection", (socket) => {
-  socket.on("addPost", (data) => socket.emit("addPost", data));
-  socket.on("updatePost", (data) => socket.emit("updatePost", data));
-  socket.on("deletePost", (data) => socket.emit("deletePost", data));
-
-  socket.on("disconnect", () => {
-    console.log("Disconnected");
-  });
 });
 
 app.get("/", (req, res) => {
