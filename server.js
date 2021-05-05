@@ -9,8 +9,8 @@ import FollowRouter from "./routes/FollowRoutes.js";
 import LikeRouter from "./routes/LikeRouter.js";
 import ImageRouter from "./routes/ImageRouter.js";
 import Grid from "gridfs-stream";
-import { createServer } from "http";
-import * as socket from "socket.io";
+import http from "http";
+import { Server } from "socket.io";
 dotenv.config();
 import Post from "./models/PostModel.js";
 
@@ -18,8 +18,8 @@ const PORT = process.env.PORT;
 
 const app = express();
 
-const server = createServer(app);
-const io = new socket.Server(server);
+const server = http.createServer(app);
+const io = new Server(server);
 
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
@@ -82,4 +82,6 @@ app.get("/", (req, res) => {
   res.status(500).send("Server Ready!");
 });
 
-app.listen(PORT, () => console.log(`Express Server listening on port ${PORT}`));
+server.listen(PORT, () => {
+  console.log(`Express Server listening on port ${PORT}`);
+});
