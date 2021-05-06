@@ -31,6 +31,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json({ limit: "50mb" }));
 
 io.on("connection", (socket) => {
+  const posts = Post.find();
+  socket.emit("getPosts", posts);
+
   socket.on("addPost", async (post) => {
     const newPost = new Post({
       user: post._id,
@@ -41,7 +44,7 @@ io.on("connection", (socket) => {
     });
 
     await newPost.save();
-    io.emit("sendPostToClient", newPost);
+    socket.emit("sendPostToClient", newPost);
   });
 
   socket.on("disconnect", () => {
