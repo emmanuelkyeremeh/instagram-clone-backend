@@ -41,7 +41,7 @@ io.on("connection", (socket) => {
     });
 
     await newPost.save();
-    io.emit("sendPostToClient", newPost);
+    socket.emit("sendPostToClient", newPost);
   });
 
   socket.on("disconnect", () => {
