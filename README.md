@@ -1,6 +1,7 @@
 # Instagram clone backend
 Chekout the [readme](https://github.com/emmanuelkyeremeh/instagram-clone-frontend/blob/main/README.md) on how to install the frontend locally before you install the backend.
-clone this repository using this [link](https://github.com/emmanuelkyeremeh/instagram-clone-backend.git)
+
+Clone this repository using this [link](https://github.com/emmanuelkyeremeh/instagram-clone-backend.git)
  
  now run the following code to start the server
  ```
